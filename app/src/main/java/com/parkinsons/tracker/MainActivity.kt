@@ -11,70 +11,67 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var currentState = "OFF"
-    private var currentSeverity = "Moderate"
-    private var pumpRate = "BASE"
-    private var lastBonusTime = 0L
-
     private lateinit var tvStatus: TextView
     private lateinit var tvLog: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        try {
+            setContentView(R.layout.activity_main)
 
-        tvStatus = findViewById(R.id.tvCurrentStatus)
-        tvLog = findViewById(R.id.tvLog)
+            tvStatus = findViewById(R.id.tvCurrentStatus)
+            tvLog = findViewById(R.id.tvLog)
 
-        setupClickListeners()
-        updateStatus()
+            setupClickListeners()
+            updateStatus()
+            appendLog("App started successfully")
+        } catch (e: Exception) {
+            logCrash(e)
+            throw e  // re-throw so we see the normal crash too
+        }
     }
 
     private fun setupClickListeners() {
         findViewById<Button>(R.id.btnOn).setOnClickListener {
-            currentState = "ON"
-            currentSeverity = ""
-            logEntry("ON", "", "Patient is ON")
+            appendLog("Button pressed: ON")
         }
 
-        findViewById<Button>(R.id.btnMild).setOnClickListener { setOff("Mild") }
-        findViewById<Button>(R.id.btnModerate).setOnClickListener { setOff("Moderate") }
-        findViewById<Button>(R.id.btnSevere).setOnClickListener { setOff("Severe") }
+        findViewById<Button>(R.id.btnMild).setOnClickListener { appendLog("Button pressed: Mild") }
+        findViewById<Button>(R.id.btnModerate).setOnClickListener { appendLog("Button pressed: Moderate") }
+        findViewById<Button>(R.id.btnSevere).setOnClickListener { appendLog("Button pressed: Severe") }
 
-        findViewById<RadioGroup>(R.id.rgPump).setOnCheckedChangeListener { _, id ->
-            pumpRate = when(id) {
-                R.id.rbOff -> "OFF"
-                R.id.rbLow -> "LOW"
-                R.id.rbBase -> "BASE"
-                R.id.rbHigh -> "HIGH"
-                else -> "BASE"
+        findViewById<Button>(R.id.btnBonusDose).setOnClickListener { appendLog("Button pressed: Bonus Dose") }
+        findViewById<Button>(R.id.btnOralLevo).setOnClickListener { appendLog("Button pressed: Oral Levodopa") }
+        findViewById<Button>(R.id.btnAddNote).setOnClickListener {
+            appendLog("Add Note button pressed")
+            showNoteDialog()
+        }
+    }
+
+    private fun appendLog(message: String) {
+        val time = SimpleDateFormat("HH:mm:ss", Locale.US).format(Date())
+        val line = "$time - $message"
+
+        tvLog.text = line + "\n" + tvLog.text
+
+        try {
+            val file = File(getExternalFilesDir(null), "crash_log.txt")
+            FileWriter(file, true).use { it.append("$time - $message\n") }
+        } catch (e: Exception) {}
+    }
+
+    private fun logCrash(e: Exception) {
+        try {
+            val file = File(getExternalFilesDir(null), "crash_log.txt")
+            FileWriter(file, true).use {
+                it.append("=== CRASH ===\n")
+                it.append("Time: ${Date()}\n")
+                it.append("Message: ${e.message}\n")
+                it.append("Stack trace:\n")
+                e.printStackTrace(PrintWriter(it))
+                it.append("================\n\n")
             }
-        }
-
-        findViewById<Button>(R.id.btnBonusDose).setOnClickListener { bonusDose() }
-        findViewById<Button>(R.id.btnOralLevo).setOnClickListener { oralLevodopa() }
-        findViewById<Button>(R.id.btnAddNote).setOnClickListener { showNoteDialog() }
-    }
-
-    private fun setOff(severity: String) {
-        currentState = "OFF"
-        currentSeverity = severity
-        logEntry("OFF", severity, "Patient is OFF - $severity")
-        updateStatus()
-    }
-
-    private fun bonusDose() {
-        val now = System.currentTimeMillis()
-        if (now - lastBonusTime < 3600000) {
-            Toast.makeText(this, "Bonus dose cooldown is active (1 hour)", Toast.LENGTH_LONG).show()
-        } else {
-            lastBonusTime = now
-            logEntry(currentState, currentSeverity, "Bonus Dose Given")
-        }
-    }
-
-    private fun oralLevodopa() {
-        logEntry(currentState, currentSeverity, "Took Oral Levodopa")
+        } catch (ex: Exception) {}
     }
 
     private fun showNoteDialog() {
@@ -84,39 +81,13 @@ class MainActivity : AppCompatActivity() {
             .setView(input)
             .setPositiveButton("Save") { _, _ ->
                 val text = input.text.toString().trim()
-                if (text.isNotEmpty()) logEntry(currentState, currentSeverity, text)
+                if (text.isNotEmpty()) appendLog("Note added: $text")
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
-    private fun logEntry(state: String, severity: String, note: String) {
-        val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())
-        val line = "$time,$state,$severity,$pumpRate,\"$note\""
-
-        try {
-            val dir = getExternalFilesDir(null)
-            val file = File(dir, "vyalev_log.csv")
-            FileWriter(file, true).use { it.append(line).append("\n") }
-            Toast.makeText(this, "Logged", Toast.LENGTH_SHORT).show()
-            loadRecentLogs()
-        } catch (e: Exception) {
-            Toast.makeText(this, "Save failed", Toast.LENGTH_LONG).show()
-        }
-    }
-
     private fun updateStatus() {
-        val statusText = if (currentState == "ON") "ON" else "OFF - $currentSeverity"
-        tvStatus.text = "Current Status: $statusText\nPump: $pumpRate"
-    }
-
-    private fun loadRecentLogs() {
-        try {
-            val file = File(getExternalFilesDir(null), "vyalev_log.csv")
-            if (file.exists()) {
-                val recent = file.readLines().takeLast(4)
-                tvLog.text = "Recent Logs:\n" + recent.joinToString("\n")
-            }
-        } catch (e: Exception) {}
+        tvStatus.text = "Current Status: OFF - Moderate\nPump: BASE"
     }
 }
