@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vyalev Tracker"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvCurrentStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Current Status: OFF - Moderate"
+            android:textSize="20sp"
+            android:padding="12dp"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <Button
+            android:id="@+id/btnOn"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:text="I AM ON"
+            android:textSize="24sp"
+            android:backgroundTint="@color/green"
+            app:layout_constraintTop_toBottomOf="@id/tvCurrentStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:id="@+id/tvOffTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I AM OFF - Severity:"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/btnOn"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp"/>
+
+        <LinearLayout
+            android:id="@+id/offButtons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            app:layout_constraintTop_toBottomOf="@id/tvOffTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp">
+
+            <Button android:id="@+id/btnMild" style="@style/OffButton" android:text="Mild"/>
+            <Button android:id="@+id/btnModerate" style="@style/OffButton" android:text="Moderate"/>
+            <Button android:id="@+id/btnSevere" style="@style/OffButton" android:text="Severe"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvPumpTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vyalev Pump:"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/offButtons"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp"/>
+
+        <RadioGroup
+            android:id="@+id/rgPump"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/tvPumpTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp">
+
+            <RadioButton android:id="@+id/rbOff" android:text="OFF"/>
+            <RadioButton android:id="@+id/rbLow" android:text="LOW"/>
+            <RadioButton android:id="@+id/rbBase" android:text="BASE" android:checked="true"/>
+            <RadioButton android:id="@+id/rbHigh" android:text="HIGH"/>
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnBonusDose"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:text="Bonus Dose (1hr cooldown)"
+            android:textSize="18sp"
+            android:backgroundTint="@color/blue"
+            app:layout_constraintTop_toBottomOf="@id/rgPump"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:id="@+id/btnOralLevo"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:text="Took Oral Levodopa"
+            android:textSize="18sp"
+            android:backgroundTint="@color/purple"
+            app:layout_constraintTop_toBottomOf="@id/btnBonusDose"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/btnAddNote"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:text="Add Note"
+            android:textSize="18sp"
+            android:backgroundTint="@color/orange"
+            app:layout_constraintTop_toBottomOf="@id/btnOralLevo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/tvLog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Recent entries will appear here..."
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/btnAddNote"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
