@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AlertDialog
 import java.io.File
 import java.io.FileWriter
+import java.io.PrintWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
             appendLog("App started successfully")
         } catch (e: Exception) {
             logCrash(e)
-            throw e  // re-throw so we see the normal crash too
+            throw e
         }
     }
 
