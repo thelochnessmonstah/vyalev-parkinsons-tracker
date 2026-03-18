@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Main app theme -->
     <style name="Theme.Tracker" parent="@android:style/Theme.Material.NoActionBar">
         <item name="android:colorPrimary">@color/blue</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <!-- Style for the three OFF severity buttons -->
+    <style name="OffButton" parent="android:Widget.Material.Button">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">8dp</item>
     </style>
 </resources>
